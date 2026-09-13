@@ -1,0 +1,84 @@
+.wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  max-width: 560px;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  transition:
+    border-color var(--duration-fast) var(--ease),
+    box-shadow var(--duration-fast) var(--ease);
+}
+
+.field:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-glow);
+}
+
+.icon {
+  font-size: var(--text-base);
+  opacity: 0.8;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-1) 0;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--color-text-subtle);
+}
+
+/* Hide the native clear affordance so the field keeps one visual language. */
+.input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.locate {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background var(--duration-fast) var(--ease);
+}
+
+.locate:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-accent) 26%, transparent);
+}
+
+.locate:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.error {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  left: var(--space-4);
+  color: var(--color-danger);
+  font-size: var(--text-xs);
+}
+
+@media (max-width: 640px) {
+  .locateLabel {
+    display: none;
+  }
+}

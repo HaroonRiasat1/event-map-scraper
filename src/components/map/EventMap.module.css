@@ -1,0 +1,15 @@
+.container {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  /* Leaflet gives its internal panes z-indexes up to 1000. Without a stacking
+     context of its own they compete directly with siblings, and the map paints
+     over the mobile bottom sheet. Isolating confines them to this subtree. */
+  isolation: isolate;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+}

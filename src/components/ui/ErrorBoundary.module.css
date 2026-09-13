@@ -1,0 +1,34 @@
+.fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  height: 100vh;
+  padding: var(--space-6);
+  text-align: center;
+}
+
+.icon {
+  font-size: 3rem;
+}
+
+.title {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+}
+
+.message {
+  max-width: 48ch;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.button {
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  color: #04121c;
+  font-weight: 700;
+}

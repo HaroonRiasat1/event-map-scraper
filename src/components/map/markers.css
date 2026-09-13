@@ -1,0 +1,78 @@
+/* Marker styles live outside CSS modules: Leaflet injects the icon HTML into
+   the DOM itself, so these class names must not be hashed. */
+
+.ems-marker {
+  background: none;
+  border: none;
+}
+
+.ems-marker__pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--marker-color);
+  border-radius: var(--radius-full) var(--radius-full) 2px;
+  background: color-mix(in srgb, var(--marker-color) 26%, #0b1120);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.5),
+    0 0 0 0 color-mix(in srgb, var(--marker-color) 40%, transparent);
+  transform: rotate(45deg);
+  transition:
+    box-shadow var(--duration-base) var(--ease),
+    transform var(--duration-base) var(--ease);
+}
+
+.ems-marker__pin:hover {
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.55),
+    0 0 0 6px color-mix(in srgb, var(--marker-color) 30%, transparent);
+}
+
+.ems-marker__pin--selected {
+  z-index: 1000;
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.6),
+    0 0 0 8px color-mix(in srgb, var(--marker-color) 32%, transparent);
+  animation: ems-marker-pop var(--duration-base) var(--ease);
+}
+
+.ems-marker__glyph {
+  font-size: 15px;
+  line-height: 1;
+  /* Undo the pin's rotation so the emoji stays upright. */
+  transform: rotate(-45deg);
+}
+
+.ems-marker__origin {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 3px solid #fff;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  box-shadow: 0 0 0 6px rgba(56, 189, 248, 0.25);
+  animation: ems-pulse 2.4s ease-out infinite;
+}
+
+@keyframes ems-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 18px rgba(56, 189, 248, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
+  }
+}
+
+@keyframes ems-marker-pop {
+  from {
+    transform: rotate(45deg) scale(0.6);
+  }
+  to {
+    transform: rotate(45deg) scale(1);
+  }
+}

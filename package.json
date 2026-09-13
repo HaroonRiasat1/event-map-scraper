@@ -1,0 +1,42 @@
+{
+  "name": "event-map-scraper",
+  "version": "1.0.0",
+  "description": "Search any city and scrape the map for nearby venues, festivals and live events \u2014 powered by OpenStreetMap.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "author": "Haroon Riasat",
+  "keywords": [
+    "react",
+    "vite",
+    "leaflet",
+    "openstreetmap",
+    "overpass-api",
+    "events",
+    "map",
+    "nominatim"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HaroonRiasat1/event-map-scraper.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-leaflet": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "vite": "^8.3.0"
+  }
+}
