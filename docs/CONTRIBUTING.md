@@ -54,6 +54,10 @@ must never overwrite a newer one.
 
 ## Gotchas worth knowing
 
+- **An Overpass mirror can be regional.** `overpass.osm.ch` has valid CORS and
+  answers fast, but carries only Switzerland — every other country comes back as
+  an empty (successful) result. Verify coverage in two countries before adding
+  a mirror.
 - **Overpass regex clauses are a trap.** `["amenity"~"^(a|b|c)$"]` bypasses the
   tag index and can hang for minutes. Use one exact-match clause per value. Same
   for key-only filters like `["event"]`.

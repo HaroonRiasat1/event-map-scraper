@@ -19,22 +19,35 @@ export const API = {
   },
   overpass: {
     /**
-     * Mirrors are tried in order when one is rate-limiting or down. Overpass
-     * instances are volunteer-run and queue requests per IP, so having somewhere
-     * else to go matters more than retrying the same host.
+     * Overpass mirrors, tried in order.
      *
-     * A mirror only belongs here if it sends `Access-Control-Allow-Origin` —
-     * without it the browser blocks the response and the fallback is worthless.
-     * Both of these were verified; several popular mirrors do not qualify.
+     * A mirror qualifies only if it meets BOTH conditions:
+     *
+     * 1. It sends `Access-Control-Allow-Origin` — without it the browser
+     *    discards the response and the fallback is worthless.
+     * 2. It carries the **global** planet database.
+     *
+     * The second condition is the easy one to miss and the dangerous one to get
+     * wrong. `overpass.osm.ch`, for example, answers fast and sends correct CORS
+     * headers, but only hosts a Switzerland extract: it returns an empty
+     * `elements` array for anywhere else on earth. That reads as a successful
+     * search with zero results, so the app silently shows "nothing found" for
+     * every city outside Switzerland instead of reporting an error.
+     *
+     * Verify coverage before adding a mirror here: query a known-busy area in
+     * two different countries and confirm both return hits.
      */
-    endpoints: [
-      'https://overpass-api.de/api/interpreter',
-      'https://overpass.osm.ch/api/interpreter',
-    ],
+    endpoints: ['https://overpass-api.de/api/interpreter'],
     /** Server-side query budget, in seconds. Must stay below `timeoutMs`. */
     queryTimeoutSec: 18,
-    /** Per-mirror client budget, so a full failover cannot exceed ~40 s. */
+    /** Per-attempt client budget. */
     timeoutMs: 20_000,
+    /**
+     * With a single mirror there is nowhere to fail over to, so transient
+     * rate-limit responses (429, and the 504 the main instance returns when its
+     * queue is full) are retried with back-off instead.
+     */
+    retries: 2,
   },
   ticketmaster: {
     baseUrl: 'https://app.ticketmaster.com/discovery/v2',

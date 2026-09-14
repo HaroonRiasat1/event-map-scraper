@@ -77,9 +77,9 @@ export function buildVenueQuery([lat, lon], radiusM) {
 /**
  * Run a query against the first mirror that answers.
  *
- * Mirrors queue requests per IP and return 429 or simply hang under load, so a
- * failed attempt moves straight to the next host instead of retrying the same
- * one — retrying a queued request only lengthens the queue.
+ * Mirrors queue requests per IP and answer 429 (or 504, once the queue is full)
+ * under load. Those are transient, so `request()` retries them with back-off
+ * before this loop moves on to the next host.
  *
  * @param {string} query Overpass QL
  * @param {{ signal?: AbortSignal }} [options]
@@ -97,7 +97,7 @@ async function runQuery(query, { signal } = {}) {
         signal,
         source: 'overpass',
         timeoutMs: API.overpass.timeoutMs,
-        retries: 0,
+        retries: API.overpass.retries,
       });
       log.debug(`${endpoint} returned ${data?.elements?.length ?? 0} elements`);
       return Array.isArray(data?.elements) ? data.elements : [];
@@ -109,7 +109,7 @@ async function runQuery(query, { signal } = {}) {
   }
 
   throw new ApiError(
-    'Every OpenStreetMap mirror is busy. They are volunteer-run and rate-limited — try again in a minute.',
+    'OpenStreetMap is busy right now. It is a volunteer-run, rate-limited service — try again in a minute.',
     { source: 'overpass', cause: lastError, retryable: true },
   );
 }

@@ -25,7 +25,7 @@ this at real volume, run your own Nominatim instance.
 
 | | |
 |---|---|
-| Endpoint | `https://overpass-api.de/api/interpreter`, falling back to `https://overpass.osm.ch` |
+| Endpoint | `https://overpass-api.de/api/interpreter` |
 | Key | None |
 | Module | [`src/api/overpass.js`](../src/api/overpass.js) |
 | Used for | Every venue on the map |
@@ -53,15 +53,27 @@ there are none, despite `event=*` being exactly the tag you would want.
 **Constraints.** Overpass instances are volunteer-run and queue requests per IP.
 The app therefore:
 
-- tries each mirror in order, moving on after 20 seconds
-- only lists mirrors that send `Access-Control-Allow-Origin`; without that header
-  a browser discards the response, so an uncheckable mirror is worse than none
-- does **not** retry the same mirror — retrying a queued request only lengthens the queue
+- retries 429 and 504 with exponential back-off (they are transient: the main
+  instance queues per IP and frees up within seconds)
+- gives each attempt 20 seconds
 - caches results for an hour, keyed by rounded coordinates + radius
 - caps output at `MAX_RESULTS` (400)
 
-When every mirror is busy the source is reported as `error` in the footer and
-the rest of the app carries on.
+When Overpass stays busy the source is reported as `error` in the footer and the
+rest of the app carries on.
+
+### Adding a mirror — check coverage, not just CORS
+
+A mirror qualifies only if it sends `Access-Control-Allow-Origin` **and** carries
+the global planet database. The second is easy to miss: `overpass.osm.ch` answers
+in under a second with correct CORS headers, but hosts only a **Switzerland
+extract**. It returns an empty `elements` array for everywhere else on earth,
+which the app cannot distinguish from a genuinely empty area — so it silently
+reported "nothing found" for every city outside Switzerland. It was removed for
+exactly this reason.
+
+Before adding one, query a known-busy area in two different countries and
+confirm both return hits.
 
 ## 3. Ticketmaster Discovery — real dated events (optional)
 
