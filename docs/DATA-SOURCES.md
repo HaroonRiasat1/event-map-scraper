@@ -25,7 +25,7 @@ this at real volume, run your own Nominatim instance.
 
 | | |
 |---|---|
-| Endpoint | `https://overpass-api.de/api/interpreter` (+ two fallback mirrors) |
+| Endpoint | `https://overpass-api.de/api/interpreter`, falling back to `https://overpass.osm.ch` |
 | Key | None |
 | Module | [`src/api/overpass.js`](../src/api/overpass.js) |
 | Used for | Every venue on the map |
@@ -53,7 +53,9 @@ there are none, despite `event=*` being exactly the tag you would want.
 **Constraints.** Overpass instances are volunteer-run and queue requests per IP.
 The app therefore:
 
-- tries three mirrors in order, moving on after 20 seconds
+- tries each mirror in order, moving on after 20 seconds
+- only lists mirrors that send `Access-Control-Allow-Origin`; without that header
+  a browser discards the response, so an uncheckable mirror is worse than none
 - does **not** retry the same mirror — retrying a queued request only lengthens the queue
 - caches results for an hour, keyed by rounded coordinates + radius
 - caps output at `MAX_RESULTS` (400)

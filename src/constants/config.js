@@ -22,15 +22,18 @@ export const API = {
      * Mirrors are tried in order when one is rate-limiting or down. Overpass
      * instances are volunteer-run and queue requests per IP, so having somewhere
      * else to go matters more than retrying the same host.
+     *
+     * A mirror only belongs here if it sends `Access-Control-Allow-Origin` —
+     * without it the browser blocks the response and the fallback is worthless.
+     * Both of these were verified; several popular mirrors do not qualify.
      */
     endpoints: [
       'https://overpass-api.de/api/interpreter',
-      'https://overpass.kumi.systems/api/interpreter',
-      'https://overpass.private.coffee/api/interpreter',
+      'https://overpass.osm.ch/api/interpreter',
     ],
     /** Server-side query budget, in seconds. Must stay below `timeoutMs`. */
     queryTimeoutSec: 18,
-    /** Per-mirror client budget. Three mirrors × 20 s caps the wait at a minute. */
+    /** Per-mirror client budget, so a full failover cannot exceed ~40 s. */
     timeoutMs: 20_000,
   },
   ticketmaster: {
